@@ -1,0 +1,780 @@
+/* Altura real do iframe/viewport — evita 100dvh usar a janela do browser em vez do iframe */
+
+:root {
+  --app-h: 100vh;
+  --app-w: 100vw;
+}
+
+html.layout-embedded {
+  height: var(--app-h);
+  overflow: hidden;
+}
+
+html.layout-embedded body {
+  height: var(--app-h);
+  min-height: 0;
+  overflow: hidden;
+}
+
+html.layout-embedded #app {
+  height: 100%;
+  min-height: 0;
+}
+
+/* 100vh no iframe = altura do browser — corrigir telas (exceto hero do menu) */
+html.layout-embedded .screen,
+html.layout-embedded .screen.active {
+  min-height: 0 !important;
+}
+
+html.layout-embedded #screen-start.active {
+  height: var(--app-h);
+  max-height: var(--app-h);
+  min-height: var(--app-h);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  position: relative;
+  background-color: var(--bg-card);
+  background-image:
+    linear-gradient(rgba(239, 184, 60, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239, 184, 60, 0.028) 1px, transparent 1px);
+  background-size: 32px 32px;
+  border-top: 4px solid var(--accent);
+}
+
+html.layout-embedded #screen-start.active::before {
+  content: none;
+}
+
+html.layout-embedded #screen-start.active .hero {
+  min-height: 0;
+  height: auto;
+  justify-content: flex-start;
+  overflow: visible;
+  background: transparent;
+  border-top: none;
+  position: relative;
+  z-index: 1;
+}
+
+html.layout-embedded #screen-start.active .hero::before {
+  display: none;
+}
+
+html.layout-embedded #screen-start #btn-start {
+  position: relative;
+  z-index: 2;
+}
+
+body:has(#screen-game.active) {
+  height: var(--app-h);
+}
+
+#screen-game.screen.active {
+  height: var(--app-h);
+  max-height: var(--app-h);
+}
+
+#screen-game .tabs {
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-height: 2.35rem;
+  flex-shrink: 0;
+}
+
+body.onboarding-active {
+  height: var(--app-h);
+}
+
+/* —— Menu inicial compacto (iframe baixo / mobile vertical estreito) —— */
+html.layout-compact #screen-start.active {
+  display: block;
+  height: var(--app-h);
+  max-height: var(--app-h);
+  min-height: var(--app-h);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  background-color: var(--bg-card);
+  background-image:
+    linear-gradient(rgba(239, 184, 60, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239, 184, 60, 0.028) 1px, transparent 1px);
+  background-size: 32px 32px;
+  border-top: 4px solid var(--accent);
+}
+
+html.layout-compact #screen-start.active::before {
+  content: none;
+}
+
+html.layout-compact #screen-start .hero {
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  justify-content: flex-start;
+  padding: 0.5rem 0.7rem 0.85rem;
+  overflow: visible;
+  background: transparent;
+  border-top: none;
+  position: relative;
+  z-index: 1;
+}
+
+html.layout-compact #screen-start .hero::before {
+  display: none;
+}
+
+html.layout-compact #screen-start #btn-start {
+  position: relative;
+  z-index: 2;
+}
+
+html.layout-compact #screen-start .hero-title {
+  font-size: clamp(1.5rem, 5.5vw, 2.35rem);
+  letter-spacing: 2px;
+  margin-bottom: 0.3rem;
+  line-height: 1.05;
+}
+
+html.layout-compact #screen-start .hero-sub {
+  display: block;
+  font-size: clamp(0.78rem, 2.8vw, 0.92rem);
+  line-height: 1.35;
+  margin-bottom: 0.5rem;
+  max-width: 100%;
+}
+
+html.layout-compact #screen-start .lang-picker {
+  margin-bottom: 0.6rem;
+  gap: 0.3rem;
+}
+
+html.layout-compact #screen-start .lang-picker-label {
+  display: block;
+  font-size: 0.68rem;
+}
+
+html.layout-compact #screen-start .lang-option {
+  min-width: 6.25rem;
+  padding: 0.42rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+html.layout-compact #screen-start .start-panel {
+  max-width: 100%;
+  gap: 0.55rem;
+}
+
+html.layout-compact #screen-start .start-form,
+html.layout-compact #screen-start .resume-card {
+  padding: 0.8rem;
+  gap: 0.5rem;
+}
+
+html.layout-compact #screen-start .start-form label,
+html.layout-compact #screen-start .start-division-label {
+  font-size: 0.78rem;
+}
+
+html.layout-compact #screen-start .start-form input {
+  padding: 0.58rem 0.7rem;
+  font-size: 0.9rem;
+}
+
+html.layout-compact #screen-start .start-form .btn-lg {
+  padding: 0.62rem 0.95rem;
+  font-size: 0.9rem;
+}
+
+html.layout-compact #screen-start .hint {
+  display: block;
+  font-size: clamp(0.68rem, 2.4vw, 0.76rem);
+  line-height: 1.35;
+  margin-top: 0.2rem;
+  padding-bottom: 0.15rem;
+}
+
+/* Telas muito baixas: aperta espaçamento, mas mantém textos visíveis (scroll no #screen-start) */
+html.layout-short #screen-start .hero {
+  padding-top: 0.4rem;
+  padding-bottom: 0.85rem;
+}
+
+html.layout-short #screen-start .hero-sub {
+  margin-bottom: 0.35rem;
+}
+
+html.layout-short #screen-start .lang-picker {
+  margin-bottom: 0.45rem;
+}
+
+/* —— Jogo: topbar e abas compactas —— */
+html.layout-compact #screen-game .topbar {
+  padding: 0.4rem 0.65rem;
+  gap: 0.35rem;
+}
+
+html.layout-compact #screen-game .club-info h2 {
+  font-size: 0.95rem;
+}
+
+html.layout-compact #screen-game .season-label {
+  font-size: 0.68rem;
+}
+
+html.layout-compact #screen-game .stat-pill {
+  min-width: 3.6rem;
+  padding: 0.24rem 0.48rem;
+  overflow: visible;
+}
+
+html.layout-compact #screen-game .stat-label {
+  font-size: 0.66rem;
+  line-height: 1.2;
+}
+
+html.layout-compact #screen-game .stat-value {
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+html.layout-compact #screen-game .tabs {
+  padding: 0.15rem 0.4rem 0;
+}
+
+html.layout-compact #screen-game .tab {
+  padding: 0.48rem 0.68rem;
+  font-size: 0.74rem;
+  line-height: 1.2;
+}
+
+html.layout-compact #screen-game .content {
+  padding: 0.35rem 0.45rem 0.5rem;
+}
+
+html.layout-compact #screen-game .tab-scroll-panel.active {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+html.layout-compact .card-head h3,
+html.layout-compact .empty-msg,
+html.layout-compact .hint {
+  line-height: 1.35;
+}
+
+/* —— Mobile vertical —— */
+html.layout-portrait #screen-game .topbar {
+  flex-wrap: wrap;
+}
+
+html.layout-portrait #screen-game .topbar-stats {
+  width: 100%;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html.layout-portrait #screen-game .topbar-stats::-webkit-scrollbar {
+  display: none;
+}
+
+html.layout-portrait #screen-game .topbar-stats .stat {
+  flex-shrink: 0;
+}
+
+/* Menus horizontais sem barra visível (mobile vertical) */
+html.layout-portrait #screen-game .tabs,
+html.layout-portrait .division-tabs,
+html.layout-portrait .stats-category-tabs,
+html.layout-portrait .market-filters,
+html.layout-portrait .squad-formation-panel,
+html.layout-portrait .copa-timeline {
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html.layout-portrait #screen-game .tabs::-webkit-scrollbar,
+html.layout-portrait .division-tabs::-webkit-scrollbar,
+html.layout-portrait .stats-category-tabs::-webkit-scrollbar,
+html.layout-portrait .market-filters::-webkit-scrollbar,
+html.layout-portrait .squad-formation-panel::-webkit-scrollbar,
+html.layout-portrait .copa-timeline::-webkit-scrollbar {
+  display: none;
+}
+
+html.layout-portrait #screen-game .tab,
+html.layout-portrait .division-tab,
+html.layout-portrait .stats-category-tab,
+html.layout-portrait .copa-timeline-step {
+  flex-shrink: 0;
+}
+
+html.layout-portrait .market-filters > * {
+  flex-shrink: 0;
+}
+
+html.layout-portrait .squad-formation-panel > * {
+  flex-shrink: 0;
+}
+
+html.layout-portrait .league-header {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+html.layout-portrait .division-tabs {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Personalizar escudo: scroll vertical sem barra */
+html.layout-portrait .modal-crest .modal-content.modal-crest-wide {
+  max-height: calc(var(--app-h) - 1.25rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html.layout-portrait .modal-crest .modal-content.modal-crest-wide::-webkit-scrollbar {
+  display: none;
+}
+
+html.layout-portrait .modal-crest #modal-body {
+  overflow: visible;
+}
+
+html.layout-portrait #screen-game .club-shield {
+  width: 2.1rem;
+  height: 2.1rem;
+  font-size: 0.72rem;
+}
+
+html.layout-portrait .modal-content {
+  max-height: min(calc(var(--app-h) - 1.5rem), 820px);
+}
+
+html.layout-portrait .modal-negotiation .modal-content.modal-negotiation-wide {
+  max-height: min(calc(var(--app-h) - 1rem), 820px);
+}
+
+/* Elenco empilhado: iframe baixo + mobile vertical (fora do tutorial também) */
+html.layout-compact .tab-panel-game.tab-panel.active,
+html.layout-portrait .tab-panel-game.tab-panel.active {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+html.layout-compact .squad-layout,
+html.layout-portrait .squad-layout {
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  gap: 0.55rem;
+}
+
+html.layout-compact .squad-bench-panel,
+html.layout-portrait .squad-bench-panel {
+  flex: none;
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  height: auto;
+  order: 1;
+}
+
+html.layout-compact .squad-pitch-panel,
+html.layout-portrait .squad-pitch-panel {
+  flex: none;
+  width: 100%;
+  order: -1;
+  padding: 0.35rem 0.35rem 0.15rem;
+}
+
+html.layout-compact .squad-formation-panel,
+html.layout-portrait .squad-formation-panel {
+  flex: none;
+  width: 100%;
+  height: auto;
+  order: 0;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.65rem;
+}
+
+html.layout-compact .pitch-fit,
+html.layout-portrait .pitch-fit {
+  width: 100%;
+  justify-content: center;
+}
+
+html.layout-compact .squad-layout .pitch,
+html.layout-portrait .squad-layout .pitch {
+  height: auto;
+  width: min(92vw, 320px);
+  max-width: 100%;
+  aspect-ratio: 2 / 3;
+  margin-inline: auto;
+}
+
+html.layout-portrait .squad-layout .pitch {
+  width: min(88vw, 300px);
+}
+
+html.layout-compact .squad-bench-list,
+html.layout-portrait .squad-bench-list {
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+html.layout-compact .dashboard-grid,
+html.layout-portrait .dashboard-grid {
+  gap: 0.55rem;
+}
+
+html.layout-portrait .dashboard-grid {
+  grid-template-columns: 1fr;
+}
+
+html.layout-portrait .dashboard-span-2 {
+  grid-column: auto;
+}
+
+/* Tutorial / onboarding: mesmas regras de elenco em viewport baixo (não quebrar animações) */
+html.layout-compact body.onboarding-active.onboarding-step-squad .tab-panel-game.tab-panel.active,
+html.layout-compact body.onboarding-active.onboarding-step-squad .squad-layout,
+html.layout-portrait body.onboarding-active.onboarding-step-squad .tab-panel-game.tab-panel.active,
+html.layout-portrait body.onboarding-active.onboarding-step-squad .squad-layout {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+html.layout-compact body.onboarding-active.onboarding-step-squad .squad-layout,
+html.layout-portrait body.onboarding-active.onboarding-step-squad .squad-layout {
+  flex-direction: column !important;
+  height: auto;
+  min-height: 0;
+}
+
+html.layout-compact body.onboarding-active.onboarding-step-squad .squad-pitch-panel,
+html.layout-portrait body.onboarding-active.onboarding-step-squad .squad-pitch-panel {
+  flex: none;
+  width: 100%;
+  order: -1;
+  overflow: visible;
+}
+
+html.layout-compact body.onboarding-active.onboarding-step-squad .squad-formation-panel,
+html.layout-portrait body.onboarding-active.onboarding-step-squad .squad-formation-panel {
+  flex: none;
+  width: 100%;
+  order: 0;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+html.layout-compact body.onboarding-active.onboarding-step-squad .squad-bench-panel,
+html.layout-portrait body.onboarding-active.onboarding-step-squad .squad-bench-panel {
+  flex: none;
+  width: 100%;
+  order: 1;
+}
+
+html.layout-compact body.onboarding-active.onboarding-step-squad .squad-layout .pitch,
+html.layout-portrait body.onboarding-active.onboarding-step-squad .squad-layout .pitch {
+  width: min(92vw, 360px);
+  height: auto;
+  margin-inline: auto;
+}
+
+/* Tutorial: hint compacto em telas baixas */
+html.layout-compact .tutorial-overlay-hint {
+  max-width: min(92vw, 280px);
+  font-size: 0.78rem;
+  padding: 0.55rem 0.65rem;
+}
+
+html.layout-compact .tutorial-overlay-hint.has-action {
+  gap: 0.45rem;
+}
+
+.loading.hidden {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* —— Partida ao vivo / resultado: zoom out no desktop iframe (paisagem) —— */
+html.layout-match-zoom #screen-game.match-focus .match-live:not(.hidden),
+html.layout-match-zoom #screen-game.match-focus .match-result:not(.hidden) {
+  zoom: var(--match-ui-scale, 1);
+}
+
+@supports not (zoom: 1) {
+  html.layout-match-zoom #screen-game.match-focus .match-live:not(.hidden),
+  html.layout-match-zoom #screen-game.match-focus .match-result:not(.hidden) {
+    transform: scale(var(--match-ui-scale, 1));
+    transform-origin: top center;
+    height: calc(100% / var(--match-ui-scale, 1));
+    max-height: calc(var(--app-h) / var(--match-ui-scale, 1));
+  }
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-live-header {
+  padding: 0.5rem 0.85rem 0.35rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-live-progress {
+  margin: 0 0.85rem 0.45rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-live-score-block {
+  margin: 0 0.85rem 0.45rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-live-scoreboard {
+  padding: 0.85rem 0.85rem 0.55rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-live-clock {
+  font-size: clamp(1.35rem, 4.5vw, 1.85rem);
+}
+
+html.layout-match-zoom #screen-game.match-focus .live-scoreline {
+  font-size: clamp(2.1rem, 8.5vw, 3rem);
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-crest.team-crest {
+  width: 3.25rem;
+  height: 3.65rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-crest.team-crest-initials {
+  height: 3.25rem;
+  font-size: 0.95rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-side-name {
+  font-size: 0.88rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-live-commentary-feed {
+  padding: 0.55rem 0.85rem 0.7rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .commentary-line {
+  font-size: 0.78rem;
+  padding: 0.28rem 0;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-result-header {
+  padding: 0.5rem 0.85rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-result .match-score-block {
+  margin: 0 0.85rem 0.45rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-result .result-scoreline {
+  font-size: clamp(2.1rem, 8.5vw, 3rem);
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-result-detail {
+  padding: 0 0.85rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-result-tabs {
+  margin-bottom: 0.45rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-result-tab {
+  padding: 0.38rem 0.65rem;
+  font-size: 0.78rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .match-result-scroll .roster-row {
+  padding: 0.32rem 0.45rem;
+  font-size: 0.78rem;
+}
+
+html.layout-match-zoom #screen-game.match-focus .btn-skip-live,
+html.layout-match-zoom #screen-game.match-focus .btn-match-continue {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.7rem;
+}
+
+/* —— Modal de proposta de contratação (negociação) —— */
+html.layout-match-zoom .modal-negotiation {
+  padding: 0.4rem;
+}
+
+html.layout-match-zoom .modal-negotiation .modal-content.modal-negotiation-wide {
+  zoom: var(--match-ui-scale, 1);
+  max-height: calc((var(--app-h) - 0.8rem) / var(--match-ui-scale, 1));
+  padding: 0.85rem 1rem;
+}
+
+@supports not (zoom: 1) {
+  html.layout-match-zoom .modal-negotiation .modal-content.modal-negotiation-wide {
+    transform: scale(var(--match-ui-scale, 1));
+    transform-origin: center center;
+    max-height: calc((var(--app-h) - 0.8rem) / var(--match-ui-scale, 1));
+  }
+}
+
+/* —— Tutorial do mercado (modal-tutorial — só “Como funciona o mercado”) —— */
+html.layout-match-zoom .modal-tutorial {
+  padding: 0.4rem;
+}
+
+html.layout-match-zoom .modal-tutorial .modal-content.modal-tutorial-wide {
+  zoom: var(--match-ui-scale, 1);
+  max-height: calc((var(--app-h) - 0.8rem) / var(--match-ui-scale, 1));
+}
+
+@supports not (zoom: 1) {
+  html.layout-match-zoom .modal-tutorial .modal-content.modal-tutorial-wide {
+    transform: scale(var(--match-ui-scale, 1));
+    transform-origin: center center;
+    max-height: calc((var(--app-h) - 0.8rem) / var(--match-ui-scale, 1));
+  }
+}
+
+html.layout-match-zoom .modal-negotiation h3 {
+  margin-bottom: 0.65rem;
+  font-size: 0.95rem;
+}
+
+html.layout-match-zoom .negotiation-summary {
+  gap: 0.4rem;
+  margin-bottom: 0.55rem;
+}
+
+html.layout-match-zoom .negotiation-stat {
+  padding: 0.42rem 0.38rem;
+}
+
+html.layout-match-zoom .negotiation-stat-label {
+  font-size: 0.58rem;
+}
+
+html.layout-match-zoom .negotiation-stat-value {
+  font-size: 0.88rem;
+}
+
+html.layout-match-zoom .negotiation-stat-rep {
+  font-size: 0.66rem;
+}
+
+html.layout-match-zoom .negotiation-warn,
+html.layout-match-zoom .negotiation-legend-hint,
+html.layout-match-zoom .negotiation-rep-hint {
+  font-size: 0.72rem;
+  margin-bottom: 0.5rem;
+}
+
+html.layout-match-zoom .negotiation-player {
+  gap: 0.65rem;
+  margin-bottom: 0.55rem;
+  padding: 0.55rem 0.7rem;
+}
+
+html.layout-match-zoom .negotiation-player-name {
+  font-size: 0.92rem;
+}
+
+html.layout-match-zoom .negotiation-player-meta {
+  font-size: 0.74rem;
+  margin-bottom: 0.3rem;
+}
+
+html.layout-match-zoom .negotiation-prices {
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+html.layout-match-zoom .negotiation-price-label {
+  font-size: 0.7rem;
+}
+
+html.layout-match-zoom .negotiation-offer-value {
+  font-size: 1rem;
+}
+
+html.layout-match-zoom .negotiation-offer-range {
+  font-size: 0.7rem;
+  margin-bottom: 0.55rem;
+}
+
+html.layout-match-zoom .negotiation-meter {
+  margin-bottom: 0.5rem;
+}
+
+html.layout-match-zoom .negotiation-meter-label,
+html.layout-match-zoom .negotiation-meter-ticks {
+  font-size: 0.62rem;
+}
+
+html.layout-match-zoom .negotiation-actions {
+  gap: 0.45rem;
+}
+
+html.layout-match-zoom .negotiation-actions .btn {
+  font-size: 0.8rem;
+  padding: 0.45rem 0.75rem;
+}
+
+/* —— Aba mercado (filtros/lista) —— */
+html.layout-match-zoom #tab-market .market-toolbar-title {
+  font-size: 0.88rem;
+  margin-bottom: 0.3rem;
+}
+
+html.layout-match-zoom #tab-market .market-filters {
+  padding: 0.55rem !important;
+  margin-bottom: 0.55rem;
+  gap: 0.35rem;
+}
+
+html.layout-match-zoom #tab-market .market-filters input,
+html.layout-match-zoom #tab-market .market-filters select {
+  padding: 0.38rem 0.55rem;
+  font-size: 0.76rem;
+  min-width: 0;
+}
+
+html.layout-match-zoom #tab-market .market-filters #btn-filter {
+  padding: 0.38rem 0.65rem;
+  font-size: 0.76rem;
+}
+
+html.layout-match-zoom #tab-market .market-list {
+  gap: 0.55rem;
+  margin-bottom: 0.55rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+html.layout-match-zoom #tab-market .pagination {
+  font-size: 0.78rem;
+}

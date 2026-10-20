@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Soccer Legends — Football Manager</title>
+  <link rel="stylesheet" href="css/fonts.css?v=1">
+  <link rel="stylesheet" href="css/style.css?v=109">
+  <link rel="stylesheet" href="css/viewport-fit.css?v=11">
+  <script>
+    (function () {
+      var d = document.documentElement;
+      var h = window.innerHeight;
+      var w = window.innerWidth;
+      d.style.setProperty('--app-h', h + 'px');
+      d.style.setProperty('--app-w', w + 'px');
+      if (window.self !== window.top) d.classList.add('layout-embedded');
+      if (h <= 560) d.classList.add('layout-compact');
+      if (h > w) d.classList.add('layout-portrait');
+      if (h <= 520) d.classList.add('layout-short');
+      var matchScale = 1;
+      if (h <= w) {
+        if (h < 720) {
+          if (h >= 640) matchScale = 0.94;
+          else if (h >= 580) matchScale = 0.88;
+          else if (h >= 520) matchScale = 0.82;
+          else matchScale = 0.76;
+        }
+      }
+      d.style.setProperty('--match-ui-scale', String(matchScale));
+      if (matchScale < 0.99) d.classList.add('layout-match-zoom');
+    })();
+  </script>
+</head>
+<body>
+  <div id="app">
+    <!-- TELA INICIAL -->
+    <section id="screen-start" class="screen active">
+      <div class="hero">
+        <h1 class="hero-title">World Soccer <span>Legends</span></h1>
+        <p class="hero-sub" data-i18n="heroSub">You are the president. Build your squad, compete in the league and win the title.</p>
+        <div class="lang-picker" role="radiogroup" aria-labelledby="lang-picker-label">
+          <span id="lang-picker-label" class="lang-picker-label" data-i18n="langLabel">Language</span>
+          <div class="lang-options" id="lang-options">
+            <button type="button" class="lang-option active" data-lang="en" role="radio" aria-checked="true">
+              <span class="lang-flag" aria-hidden="true">
+                <svg viewBox="0 0 24 16" width="24" height="16" aria-hidden="true">
+                  <rect width="24" height="16" fill="#012169"/>
+                  <path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="2.4"/>
+                  <path d="M0 0l24 16M24 0L0 16" stroke="#c8102e" stroke-width="1.2"/>
+                  <path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="4"/>
+                  <path d="M12 0v16M0 8h24" stroke="#c8102e" stroke-width="2.4"/>
+                </svg>
+              </span>
+              <span class="lang-name" data-i18n="langEn">English</span>
+            </button>
+            <button type="button" class="lang-option" data-lang="pt" role="radio" aria-checked="false">
+              <span class="lang-flag" aria-hidden="true">
+                <svg viewBox="0 0 24 16" width="24" height="16"><rect width="24" height="16" fill="#009b3a"/><path d="M12 1.2L22 8 12 14.8 2 8z" fill="#ffdf00"/><circle cx="12" cy="8" r="3.4" fill="#002776"/></svg>
+              </span>
+              <span class="lang-name" data-i18n="langPt">Português</span>
+            </button>
+          </div>
+        </div>
+        <div class="start-panel">
+          <div class="resume-card hidden" id="resume-card">
+            <div class="resume-card-text">
+              <span class="resume-card-label" data-i18n="continueLabel">Saved career</span>
+              <p id="continue-save-summary" class="continue-save-summary" role="status"></p>
+            </div>
+            <button type="button" id="btn-continue" class="btn btn-primary btn-lg" data-i18n="btnContinue">Continue career</button>
+            <button type="button" id="btn-delete-save" class="btn-delete-save" data-i18n="btnDeleteSave">Delete saved career</button>
+          </div>
+
+          <div class="start-form" id="start-form">
+            <div class="start-division-picker" role="radiogroup" aria-labelledby="start-division-label">
+              <span id="start-division-label" class="start-division-label" data-i18n="startDivisionLabel">Starting division</span>
+              <div class="start-division-options" id="start-division-options">
+                <button type="button" class="start-division-option active" data-division="2" role="radio" aria-checked="true">
+                  <span class="start-division-name" data-i18n="serieB">Série B</span>
+                </button>
+                <button type="button" class="start-division-option" data-division="1" role="radio" aria-checked="false">
+                  <span class="start-division-name" data-i18n="serieA">Série A</span>
+                </button>
+              </div>
+            </div>
+            <label for="club-name" data-i18n="clubNameLabel">Your club name</label>
+            <input type="text" id="club-name" data-i18n-placeholder="clubNamePlaceholder" placeholder="e.g. Aurora Athletic" maxlength="24" value="My Club FC">
+            <button id="btn-start" class="btn btn-primary btn-lg" data-i18n="btnStart">Start Season</button>
+          </div>
+
+          <p class="hint" id="start-hint" data-i18n="startHintB">You start with a base squad — sign stars on the market to improve</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TELA PRINCIPAL -->
+    <section id="screen-game" class="screen">
+      <header class="topbar">
+        <div class="club-info">
+          <div class="club-shield" id="club-shield">FC</div>
+          <div>
+            <h2 id="display-club-name">My Club</h2>
+            <span class="season-label" id="season-label">Season 1 — Round 1/38</span>
+          </div>
+        </div>
+        <div class="topbar-stats">
+          <div class="audio-controls" id="audio-controls" aria-label="Audio">
+            <button type="button" class="audio-btn active" id="btn-toggle-music" data-i18n-title="musicTitle" title="Background music" aria-pressed="true">🎵</button>
+            <button type="button" class="audio-btn active" id="btn-toggle-sfx" data-i18n-title="sfxTitle" title="Sound effects" aria-pressed="true">🔊</button>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-label" data-i18n="budget">Orçamento</span>
+            <span class="stat-value" id="budget-display">R$ 5M</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-label" data-i18n="squad">Elenco</span>
+            <span class="stat-value" id="squad-count">0/25</span>
+          </div>
+          <div class="stat-pill accent">
+            <span class="stat-label" data-i18n="position">Posição</span>
+            <span class="stat-value" id="league-position">—</span>
+          </div>
+        </div>
+      </header>
+
+      <nav class="tabs">
+        <button class="tab active" data-tab="dashboard" data-i18n="tabDashboard">Painel</button>
+        <button class="tab" data-tab="club" data-i18n="tabClub">Clube</button>
+        <button class="tab" data-tab="squad" data-i18n="tabSquad">Elenco</button>
+        <button class="tab" data-tab="market" data-i18n="tabMarket">Mercado</button>
+        <button class="tab" data-tab="upgrades" data-i18n="tabUpgrades">Melhorias</button>
+        <button class="tab" data-tab="league" data-i18n="tabLeague">Campeonato</button>
+        <button class="tab" data-tab="copa" data-i18n="tabCopa">Copa</button>
+        <button class="tab" data-tab="stats" data-i18n="tabStats">Estatísticas</button>
+      </nav>
+
+      <main class="content">
+        <!-- PAINEL -->
+        <div id="tab-dashboard" class="tab-panel tab-scroll-panel active">
+          <div class="dashboard-grid">
+            <div class="card card-elevated next-match-card dashboard-span-2">
+              <div class="card-head">
+                <h3 data-i18n="nextMatch">Próxima Partida</h3>
+                <span class="card-tag" id="dashboard-round-tag">—</span>
+              </div>
+              <div id="next-match-info" class="next-match">
+                <p class="empty-msg" data-i18n="buildSquadToStart">Monte seu elenco para iniciar o campeonato.</p>
+              </div>
+              <button id="btn-play-match" class="btn btn-primary" disabled data-i18n="playMatch">Jogar Partida</button>
+            </div>
+            <div class="card card-elevated">
+              <div class="card-head"><h3 data-i18n="squadSummary">Resumo do Elenco</h3></div>
+              <div id="squad-summary" class="squad-summary stat-tiles">
+                <div class="stat-tile"><span class="stat-tile-label" data-i18n="avgStrength">Força média</span><strong class="stat-tile-value" id="avg-force">—</strong></div>
+                <div class="stat-tile"><span class="stat-tile-label" data-i18n="players">Jogadores</span><strong class="stat-tile-value" id="summary-count">0</strong></div>
+                <div class="stat-tile"><span class="stat-tile-label" data-i18n="legends">Lendas</span><strong class="stat-tile-value accent" id="legend-count">0</strong></div>
+              </div>
+            </div>
+            <div class="card card-elevated standings-mini">
+              <div class="card-head"><h3 data-i18n="top5Table">Top 5 — Tabela</h3></div>
+              <div id="mini-standings" class="mini-standings-list"></div>
+            </div>
+            <div class="card card-elevated news-card dashboard-span-2">
+              <div class="card-head"><h3 data-i18n="clubNews">Notícias do Clube</h3></div>
+              <ul id="news-feed" class="news-feed"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- CLUBE -->
+        <div id="tab-club" class="tab-panel tab-scroll-panel">
+          <div id="club-panel" class="club-panel"></div>
+        </div>
+
+        <!-- ELENCO -->
+        <div id="tab-squad" class="tab-panel tab-panel-game">
+          <div id="squad-unavailable-hint" class="squad-unavailable-hint is-hidden" role="status">
+            <span id="squad-unavailable-text" class="squad-unavailable-text"></span>
+            <button type="button" id="btn-highlight-unavailable" class="btn btn-sm squad-unavailable-btn" data-i18n="squadHighlightUnavailable">Localizar</button>
+          </div>
+          <div class="squad-layout">
+            <aside class="squad-bench-panel bench-section">
+              <div class="bench-section-head">
+                <h4 data-i18n="bench">Banco de Reservas</h4>
+                <span class="bench-count" id="bench-count"></span>
+              </div>
+              <div id="bench-list" class="squad-bench-list"></div>
+            </aside>
+            <div class="pitch-container squad-pitch-panel">
+              <p class="pitch-label" data-i18n="startingLineup">Escalação titular</p>
+              <div class="pitch-fit">
+                <div class="pitch" id="pitch"></div>
+              </div>
+            </div>
+            <aside class="squad-formation-panel">
+              <h4 class="formation-panel-title" data-i18n="lineup">Escalação</h4>
+              <div class="formation-select">
+                <label for="formation-select" data-i18n="formation">Formação</label>
+                <select id="formation-select">
+                  <option value="433">4-3-3</option>
+                  <option value="442">4-4-2</option>
+                  <option value="352">3-5-2</option>
+                  <option value="4231">4-2-3-1</option>
+                </select>
+              </div>
+              <button id="btn-auto-lineup" class="btn btn-secondary" data-i18n="bestLineup">Melhor escalação</button>
+            </aside>
+          </div>
+          <div id="full-squad-list" class="visually-hidden" aria-hidden="true"></div>
+        </div>
+
+        <!-- MERCADO -->
+        <div id="tab-market" class="tab-panel tab-scroll-panel">
+          <div class="market-filters card card-elevated">
+            <h3 class="market-toolbar-title" data-i18n="transferMarket">Mercado de Transferências</h3>
+            <input type="search" id="market-search" data-i18n-placeholder="searchPlayer" placeholder="Buscar jogador...">
+            <select id="filter-position"></select>
+            <select id="filter-tier" aria-label="Tier"></select>
+            <select id="filter-force">
+              <option value="0">Qualquer força</option>
+              <option value="85">85+</option>
+              <option value="80">80+</option>
+              <option value="75">75+</option>
+            </select>
+            <select id="filter-legend"></select>
+            <select id="filter-sort">
+              <option value="budget-first" selected>Dentro do orçamento</option>
+            </select>
+            <button id="btn-filter" class="btn btn-secondary" data-i18n="filter">Filtrar</button>
+          </div>
+          <div id="market-list" class="market-list"></div>
+          <div class="pagination">
+            <button id="btn-prev-page" class="btn btn-secondary" disabled data-i18n="prevPage">← Anterior</button>
+            <span id="page-info">Página 1</span>
+            <button id="btn-next-page" class="btn btn-secondary" data-i18n="nextPage">Próxima →</button>
+          </div>
+        </div>
+
+        <!-- MELHORIAS -->
+        <div id="tab-upgrades" class="tab-panel tab-scroll-panel">
+          <div id="upgrades-panel" class="upgrades-panel"></div>
+        </div>
+
+        <!-- CAMPEONATO -->
+        <div id="tab-league" class="tab-panel tab-scroll-panel">
+          <div class="league-header panel-head">
+            <h3 id="league-title">Série B — Pontos Corridos</h3>
+            <div id="division-tabs" class="division-tabs">
+              <button class="division-tab" data-division="1" data-i18n="serieA">Série A</button>
+              <button class="division-tab active" data-division="2" data-i18n="serieB">Série B</button>
+              <button class="division-tab" data-division="3" data-i18n="serieC">Série C</button>
+            </div>
+          </div>
+          <p class="section-hint" data-i18n="leagueHint">Clique no nome do clube para ver o elenco. Top 4 da Série B sobem; últimos 4 da Série A caem.</p>
+          <div class="table-scroll-shell" data-table-scroll>
+            <button type="button" class="table-scroll-btn table-scroll-btn-prev" aria-label="Ver colunas anteriores" hidden>‹</button>
+            <div class="table-scroller table-wrapper league-table-card card card-elevated" id="standings-table-wrapper">
+              <div id="standings-update-banner" class="standings-update-banner hidden" hidden aria-live="polite"></div>
+              <table id="standings-table" class="standings-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th data-i18n="club">Clube</th>
+                    <th>J</th>
+                    <th>V</th>
+                    <th>E</th>
+                    <th>D</th>
+                    <th>GP</th>
+                    <th>GC</th>
+                    <th>SG</th>
+                    <th>Pts</th>
+                  </tr>
+                </thead>
+                <tbody id="standings-body"></tbody>
+              </table>
+            </div>
+            <button type="button" class="table-scroll-btn table-scroll-btn-next" aria-label="Ver mais colunas" hidden>›</button>
+          </div>
+          <div class="fixtures-panel card card-elevated">
+            <div class="fixtures-panel-head">
+              <div>
+                <h4 class="fixtures-title" data-i18n="yourSchedule">Seu Calendário</h4>
+                <p class="fixtures-sub" data-i18n="allRounds">Todas as rodadas da temporada</p>
+              </div>
+              <span class="fixtures-count" id="fixtures-count"></span>
+            </div>
+            <div id="fixtures-list" class="fixtures-list scroll-surface"></div>
+          </div>
+        </div>
+
+        <!-- COPA DO BRASIL -->
+        <div id="tab-copa" class="tab-panel tab-scroll-panel">
+          <div id="copa-champion-hero" class="copa-champion-hero" hidden></div>
+          <div class="panel-head">
+            <div>
+              <h3 data-i18n="tabCopa">Copa do Brasil</h3>
+              <p class="section-hint" data-i18n="copaHint">Mata-mata paralelo ao campeonato — inicia após o 1º turno.</p>
+            </div>
+          </div>
+          <div class="card card-elevated copa-status-card" id="copa-status-card">
+            <p id="copa-status" class="copa-status">—</p>
+          </div>
+          <div id="copa-bracket" class="copa-bracket"></div>
+        </div>
+
+        <!-- ESTATÍSTICAS -->
+        <div id="tab-stats" class="tab-panel tab-scroll-panel">
+          <div class="league-header panel-head">
+            <h3 id="stats-title">Série B — Estatísticas</h3>
+            <div id="stats-division-tabs" class="division-tabs">
+              <button class="division-tab" data-division="1" data-i18n="serieA">Série A</button>
+              <button class="division-tab active" data-division="2" data-i18n="serieB">Série B</button>
+              <button class="division-tab" data-division="3" data-i18n="serieC">Série C</button>
+            </div>
+          </div>
+          <div id="stats-category-tabs" class="stats-category-tabs">
+            <button class="stats-category-tab active" data-stat="goals" data-i18n="statGoalsTab">Artilharia</button>
+            <button class="stats-category-tab" data-stat="assists" data-i18n="statAssistsTab">Assistências</button>
+            <button class="stats-category-tab" data-stat="fouls" data-i18n="statFoulsTab">Faltas</button>
+            <button class="stats-category-tab" data-stat="yellowCards" data-i18n="statYellowsTab">Cartões A.</button>
+            <button class="stats-category-tab" data-stat="redCards" data-i18n="statRedsTab">Cartões V.</button>
+          </div>
+          <p class="section-hint stats-hint" data-i18n="statsHint">Estatísticas acumuladas na temporada. Gols e assistências vêm das partidas; faltas e cartões são simulados.</p>
+          <div class="table-scroll-shell" data-table-scroll>
+            <button type="button" class="table-scroll-btn table-scroll-btn-prev" aria-label="Ver colunas anteriores" hidden>‹</button>
+            <div class="table-scroller table-wrapper league-table-card card card-elevated">
+            <table id="stats-table" class="standings-table stats-leader-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th data-i18n="player">Jogador</th>
+                  <th data-i18n="club">Clube</th>
+                  <th id="stats-value-header">Gols</th>
+                </tr>
+              </thead>
+              <tbody id="stats-body"></tbody>
+            </table>
+            </div>
+            <button type="button" class="table-scroll-btn table-scroll-btn-next" aria-label="Ver mais colunas" hidden>›</button>
+          </div>
+        </div>
+
+        <!-- PARTIDA -->
+        <div id="tab-match" class="tab-panel tab-panel-match">
+          <div class="match-exit-bar">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-match-back" onclick="switchTab('dashboard')" data-i18n="backDashboard">← Painel</button>
+          </div>
+          <div class="match-stage">
+            <div id="match-preview" class="match-preview">
+              <p class="empty-msg" data-i18n="noMatchScheduled">Nenhuma partida agendada.</p>
+            </div>
+            <div id="match-live" class="match-live hidden"></div>
+            <div id="match-result" class="match-result hidden"></div>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- MODAL -->
+    <div id="modal" class="modal hidden">
+      <div class="modal-content">
+        <button class="modal-close" id="modal-close">×</button>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+
+    <!-- Tutorial guiado (overlay) -->
+    <div id="tutorial-overlay" class="tutorial-overlay hidden" aria-hidden="true">
+      <div class="tutorial-overlay-spotlight" id="tutorial-overlay-spotlight"></div>
+      <div class="tutorial-overlay-arrow" id="tutorial-overlay-arrow" aria-hidden="true">↓</div>
+      <p class="tutorial-overlay-hint" id="tutorial-overlay-hint"></p>
+    </div>
+
+    <button type="button" id="btn-skip-tutorial" class="btn btn-primary tutorial-skip-btn hidden" data-i18n="onboardingSkipTutorial">Pular tutorial</button>
+
+    <!-- LOADING -->
+    <div id="loading" class="loading">
+      <div class="loader"></div>
+      <p id="loading-text" data-i18n="loadingPlayers">Loading players...</p>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js?v=161"></script>
+</body>
+</html>
